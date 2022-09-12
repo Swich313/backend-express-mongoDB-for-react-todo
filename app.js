@@ -7,9 +7,9 @@ require('dotenv/config');
 const cors = require('cors');
 const PORT = 8000;
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/todos', todosRoute);
-app.use(cors());
 
 
 

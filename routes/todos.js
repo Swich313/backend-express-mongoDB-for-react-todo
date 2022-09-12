@@ -42,11 +42,27 @@ router.get('/:todoId', async (req, res) => {
 
 router.delete('/:todoId', async (req, res) => {
    try {
-       const deletedTodo = await Todo.remove({id: req.params.todoId});
+       const deletedTodo = await Todo.remove({_id: req.params.todoId});
        res.json(deletedTodo);
    } catch (err){
        res.json({message: err});
    }
+});
+
+router.patch('/:todoId', async (req, res) => {
+    try {
+        const updatedTodo = await Todo.updateOne(
+        {_id: req.params.todoId},
+             { $set: {title: req.body.title,
+                      description: req.body.description,
+                      type: req.body.type,
+                      completed: req.body.completed,
+                      archived: req.body.archived
+        }});
+        res.json(updatedTodo);
+    } catch (err){
+        res.json({message: err});
+    }
 });
 
 module.exports = router;
