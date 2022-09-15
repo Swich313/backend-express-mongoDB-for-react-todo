@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Todo = require('../models/Todo');
 
+
 router.get('/', async (req, res) => {
     try {
         const todos = await Todo.find();
@@ -16,18 +17,17 @@ router.post('/', async (req, res) => {
         id: req.body.id,
         title: req.body.title,
         description: req.body.description,
+        deadline: req.body.deadline,
         type: req.body.type,
         completed: req.body.completed,
         archived: req.body.archived
     });
-    console.log(todo);
     try {
         const savedTodo = await todo.save();
-            res.json(savedTodo);
+        res.json(savedTodo);
     } catch(err) {
         res.json({message: err});
     }
-
 });
 
 router.get('/:todoId', async (req, res) => {
@@ -37,28 +37,29 @@ router.get('/:todoId', async (req, res) => {
     } catch(err){
         res.json({message: err});
     }
-
 });
 
 router.delete('/:todoId', async (req, res) => {
-   try {
-       const deletedTodo = await Todo.remove({_id: req.params.todoId});
-       res.json(deletedTodo);
-   } catch (err){
-       res.json({message: err});
-   }
+    try {
+        const deletedTodo = await Todo.remove({id: req.params.todoId});
+        res.json(deletedTodo);
+    } catch (err){
+        res.json({message: err});
+    }
 });
 
 router.patch('/:todoId', async (req, res) => {
     try {
         const updatedTodo = await Todo.updateOne(
-        {_id: req.params.todoId},
-             { $set: {title: req.body.title,
-                      description: req.body.description,
-                      type: req.body.type,
-                      completed: req.body.completed,
-                      archived: req.body.archived
-        }});
+            {id: req.params.todoId},
+            { $set: {
+                    title: req.body.title,
+                    description: req.body.description,
+                    deadline: req.body.deadline,
+                    type: req.body.type,
+                    completed: req.body.completed,
+                    archived: req.body.archived
+                }});
         res.json(updatedTodo);
     } catch (err){
         res.json({message: err});

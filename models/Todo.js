@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
-const TodoSchema =  new Schema({
+const TodoSchema = new Schema({
     id: String,
     title: String,
     description: String,
+    deadline: String,
     type: String,
     completed: Boolean,
     archived: Boolean
