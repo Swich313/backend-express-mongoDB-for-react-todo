@@ -36,12 +36,13 @@ router.get('/:todoId', async (req, res) => {
         res.json(todo);
     } catch(err){
         res.json({message: err});
+
     }
 });
 
 router.delete('/:todoId', async (req, res) => {
     try {
-        const deletedTodo = await Todo.remove({id: req.params.todoId});
+        const deletedTodo = await Todo.deleteOne({_id: req.params.todoId});
         res.json(deletedTodo);
     } catch (err){
         res.json({message: err});
@@ -51,7 +52,7 @@ router.delete('/:todoId', async (req, res) => {
 router.patch('/:todoId', async (req, res) => {
     try {
         const updatedTodo = await Todo.updateOne(
-            {id: req.params.todoId},
+            {_id: req.params.todoId},
             { $set: {
                     title: req.body.title,
                     description: req.body.description,

@@ -5,14 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c3927d0f-714b-4d0c-bbfe-ab288be0c96b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/models/FIlter.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/auth.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/filters.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/backend-for-react-todo.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Filters.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/Todo.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Todo.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
@@ -62,7 +56,10 @@
       <option name="presentableId" value="Default" />
       <updated>1663152438603</updated>
       <workItem from="1663152440251" duration="7206000" />
-      <workItem from="1663229776909" duration="2995000" />
+      <workItem from="1663229776909" duration="6468000" />
+      <workItem from="1663679902399" duration="504000" />
+      <workItem from="1663743434054" duration="2379000" />
+      <workItem from="1663826399734" duration="11966000" />
     </task>
     <servers />
   </component>
