@@ -1,15 +1,31 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const app = express();
-const todosRoute = require('./routes/todos');
 const bodyParser = require('body-parser');
-require('dotenv/config');
+const mongoose = require('mongoose');
 const cors = require('cors');
-const PORT = 8000;
+
+require('dotenv/config');
+
+
+const todosRoute = require('./routes/todos');
+const authRoutes = require('./routes/auth');
+
+
+const app = express();
+const hostname = '127.0.0.1';
 
 app.use(cors());
 app.use(bodyParser.json());
+
+app.use('/auth', authRoutes);
 app.use('/todos', todosRoute);
+
+app.use((error, req, res, next) => {
+    console.log(error);
+    const status = error.statusCode || 500;
+    const message = error.message;
+    const data = error.data;
+    res.status(status).json({message: message, data: data});
+});
 
 
 
@@ -20,11 +36,10 @@ app.use('/todos', todosRoute);
 app.get('/', (req, res) => {
     res.send('Hello form express')
 })
-
-mongoose.connect(process.env.DB_CONNECTION1, () => {
-    console.log('connected to DB')
-});
-
-app.listen(PORT, () => {
-    console.log(`Server in running on port ${PORT}`)
-});
+mongoose.connect(process.env.DB_CONNECTION)
+    .then(result => {
+        app.listen(process.env.PORT || 8000, hostname, () => {
+            console.log(`Server in running at http://${hostname}:${process.env.PORT}`)
+        });
+    })
+    .catch(err => console.log(err))
