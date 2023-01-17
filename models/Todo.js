@@ -18,11 +18,11 @@ const TodoSchema =  new Schema({
         type: Date,
         default: Date.now,
     },
-    completed: {
+    isCompleted: {
         type: Boolean,
         default: false
     },
-    archived: {
+    isArchived: {
         type: Boolean,
         default: false,
     },

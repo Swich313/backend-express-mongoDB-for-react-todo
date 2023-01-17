@@ -5,8 +5,7 @@ const cors = require('cors');
 
 require('dotenv/config');
 
-
-const todosRoute = require('./routes/todos');
+const todosRoute = require('./routes/todo');
 const authRoutes = require('./routes/auth');
 
 

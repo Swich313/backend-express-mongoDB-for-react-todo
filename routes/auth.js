@@ -44,7 +44,7 @@ router.post('/login', authController.login);
 //POST /auth/reset
 router.post('/reset', body('email', 'Please enter a valid Email!').isEmail(), authController.resetRequest);
 
-//PATCH /auth/reset/:token
+//PATCH /auth/reset/ (token sent via body)
 router.patch('/reset',
     body('password', `Password is too weak! Password should contain at least one letter,
     one capital letter, one number, one symbol and be at least 8 characters long`)
