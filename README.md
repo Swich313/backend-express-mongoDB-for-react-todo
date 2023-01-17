@@ -27,3 +27,13 @@ response: send e-mail with your credentials and link /loginUrl/ which leads to f
                                                    Todos Endpoint
                                                    
 GET request to /todos
+headers: {"Authorization": "Bearer " + token}
+response: {todos: array of todos for the first page, totalItems: total amount of todos}
+pagination: 2 todos per page, todos sorted by createdAt (newest above)
+
+POST request to /todos/toso - for creating todo
+headers: {"Authorization": "Bearer " + token}
+body: {title required, description required, todoType required, isCompleted required, isArchived required, deadline optional}
+validation: ()
+response: {todo}
+
