@@ -5,13 +5,14 @@ const User = require('../models/User');
 const Todo =  require('../models/Todo');
 
 exports.getTodos = async (req, res, next) => {
-    const currentPage = req.query.page || 1;
-    const perPage = 2;
+    const currentPage = +req.query.page || 1;
+    const sortType = req.query.sort || -1;
+    const perPage = +req.query.limit || 2;
     try {
         let totalItems = await Todo.find().countDocuments();
         const todos = await Todo.find()
             // .populate('userId') if needs whole user object
-            .sort({createdAt: -1})
+            .sort({createdAt: sortType})
             .skip((currentPage - 1) * perPage)
             .limit(perPage);
         res.status(200).json({
@@ -64,6 +65,30 @@ exports.createTodo = async (req, res, next) => {
         });
     } catch (err) {
         if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.deleteTodo = async (req, res, next) => {
+    const todoId = req.params.todoId;
+    console.log(todoId)
+    try {
+        const todo = await Todo.findById(todoId);
+        if(!todo){
+            const error = new Error('Could not find todo!');
+            error.statusCode = 404;
+            throw error;
+        }
+        await Todo.findByIdAndRemove(todoId);
+        console.log(todo)
+        const user = await User.findById(req.userId);
+        user.todos.pull(todoId);
+        await user.save();
+        res.status(200).json({message: 'Todo was successfully deleted!'});
+    } catch (err) {
+        if(!err.statusCode){
             err.statusCode = 500;
         }
         next(err);

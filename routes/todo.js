@@ -8,7 +8,7 @@ const User = require('../models/User');
 
 const router = express.Router();
 
-//GET /todos/
+//GET /todos?page=2&limit=4&sort=+1 (by default page=1, limit=2, sort=-1)
 router.get('/',  isAuth, todoController.getTodos);
 
 //POST /todos/todo
@@ -22,6 +22,8 @@ router.post('/todo', [
     body('deadline', 'Invalid date')
 ], isAuth, todoController.createTodo);
 
+//DELETE /todos/todo/:todoId
+router.delete('/todo/:todoId', isAuth, todoController.deleteTodo);
 
 // router.post('/', async (req, res) => {
 //     const todo = new Todo({
