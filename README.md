@@ -26,16 +26,17 @@ response: send e-mail with your credentials and link /loginUrl/ which leads to f
 
                                                    Todos Endpoint
                                                    
-GET request to /todos/?page=2&limit=4&sort=1
+GET request to /todos/?page=2&limit=4&sort=1&filter=hobby
 (/?page=2&limit=4&sort=1 optional query params: page - current page (by default 1),
 limit - amount of todos per page (by default 2), sort - sorting by field createdAt(by default -1 {newest first} or 1 {oldest first}))
 headers: {"Authorization": "Bearer " + token}
 response: {todos: array of todos for the first page, totalItems: total amount of todos}
-pagination: 2 todos per page, todos sorted by createdAt (newest above)
+pagination: 2 todos per page, todos sorted by createdAt (newest above), todos filtered by field todoType
 
-POST request to /todos/toso - for creating todo
+POST request to /todos/todo - for creating todo
 headers: {"Authorization": "Bearer " + token}
 body: {title required, description required, todoType required, isCompleted required, isArchived required, deadline optional}
 validation: ()
 response: {todo}
+
 
