@@ -1,5 +1,6 @@
 const {validationResult} = require('express-validator');
 const jwt = require('jsonwebtoken');
+const mongoose = require("mongoose");
 
 const User = require('../models/User');
 const Todo =  require('../models/Todo');
@@ -7,10 +8,13 @@ const Todo =  require('../models/Todo');
 exports.getTodos = async (req, res, next) => {
     const currentPage = +req.query.page || 1;
     const sortType = req.query.sort || -1;
-    const perPage = +req.query.limit || 2;
+    const perPage = +req.query.limit || 4;
+    const todoTypeFilter = req.query.filter;
+    const filterObject = todoTypeFilter ? {todoType: todoTypeFilter} : null;
+    console.log(filterObject)
     try {
-        let totalItems = await Todo.find().countDocuments();
-        const todos = await Todo.find()
+        let totalItems = await Todo.find({userId: req.userId, ...filterObject}).countDocuments();
+        const todos = await Todo.find({userId: req.userId, ...filterObject})
             // .populate('userId') if needs whole user object
             .sort({createdAt: sortType})
             .skip((currentPage - 1) * perPage)
@@ -75,10 +79,20 @@ exports.deleteTodo = async (req, res, next) => {
     const todoId = req.params.todoId;
     console.log(todoId)
     try {
-        const todo = await Todo.findById(todoId);
+        const todo = await Todo.findById(todoId).populate('userId');
         if(!todo){
             const error = new Error('Could not find todo!');
             error.statusCode = 404;
+            throw error;
+        }
+        if(todo.userId._id.toString() !== req.userId){
+            const error = new Error('Not Authorized!');
+            error.statusCode = 403;
+            throw error;
+        }
+        if(!todo.isCompleted || !todo.isArchived){
+            const error = new Error('You can\'t delete this todo. Todo is not completed or archived!');
+            error.statusCode = 409;
             throw error;
         }
         await Todo.findByIdAndRemove(todoId);
@@ -87,6 +101,39 @@ exports.deleteTodo = async (req, res, next) => {
         user.todos.pull(todoId);
         await user.save();
         res.status(200).json({message: 'Todo was successfully deleted!'});
+    } catch (err) {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.updateTodo = async (req, res, next) => {
+    const todoId = req.params.todoId;
+    const isCompleted = req.body.isCompleted;
+    const isArchived = req.body.isArchived;
+    try {
+        const todo = await Todo.findById(todoId);
+        if(!todo){
+            const error = new Error('Could not find todo!');
+            error.statusCode = 404;
+            throw error;
+        }
+        if(todo.userId.toString() !== req.userId){
+            const error = new Error('Not Authorized!');
+            error.statusCode = 403;
+            throw error;
+        }
+        if(typeof isCompleted === 'boolean') {
+            todo.isCompleted = isCompleted;
+        }
+        if(typeof isArchived === 'boolean') {
+            todo.isArchived = isArchived;
+        }
+        const savedTodo =  await todo.save();
+        res.status(200).json({message: 'Todo was successfully updated!', todo: savedTodo._doc});
+
     } catch (err) {
         if(!err.statusCode){
             err.statusCode = 500;

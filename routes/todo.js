@@ -25,6 +25,9 @@ router.post('/todo', [
 //DELETE /todos/todo/:todoId
 router.delete('/todo/:todoId', isAuth, todoController.deleteTodo);
 
+//PATCH /todos/todo/:todoId
+router.patch('/todo/:todoId', isAuth, todoController.updateTodo);
+
 // router.post('/', async (req, res) => {
 //     const todo = new Todo({
 //         id: req.body.id,
