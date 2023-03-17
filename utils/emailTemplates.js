@@ -1,5 +1,29 @@
 require('dotenv/config');
 
+const activationEmail = (userName, activationLink) => {
+    const activationURl = `${process.env.BACKEND_URL}auth/activate/${activationLink}`;
+    return (`
+     <main style="margin:0; padding:0; box-sizing: border-box; 
+     display: flex; justify-content:center; align-items:center; 
+     background: #0088cc40;  min-height: 100vh;">
+            <section style="width:40vw; background-image: linear-gradient(to bottom right, #ec407b, #ff7d94);
+            border-radius:1vh;   text-align: center; box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.3); 
+            backdrop-filter: blur(15px); border-top: 1px solid #ff97ba; font-family: sans-serif; font-size: 20px;">
+                <div style="padding: 2vw; color: #fff; ">
+                    <span style="font-size: 25px; font-family: 'Open Sans', sans-serif; margin: 2vh">Welcome ${userName}</span>
+                    <p style="line-height: 1.6;">Your account has been created on the todo list. You just need to activate it.</p>
+                </div>
+                <div style="padding: 25px;">
+                    <a href='${activationURl}' title='Activate' style="text-decoration: none; position: relative; 
+                    padding: 10px 20px; color: #fff; border: 1px solid #fff; border-radius: 1vw;" 
+                    target="_blank"><span>Activate Your Account!</span></a>
+      </div>
+    </section>
+  </main>
+`
+    )
+}
+
 const signupEmail = (userName, userEmail, userPassword, urlForLogin) => {
     return (`
      <main style="margin:0; padding:0; box-sizing: border-box; 
@@ -77,6 +101,7 @@ const successfulPasswordResetEmail = (userName, userPassword, urlForLogin) => {
 };
 
 // exports {signupEmail, resetPasswordEmail}
+exports.activationEmail = activationEmail;
 exports.signupEmail = signupEmail;
 exports.resetPasswordEmail = resetPasswordEmail;
 exports.successfulPasswordResetEmail = successfulPasswordResetEmail;
