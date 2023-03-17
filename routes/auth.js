@@ -1,23 +1,25 @@
-const express = require('express');
+const Router = require('express').Router;
 const {body} = require('express-validator');
 
 const User = require('../models/User');
 const authController = require('../controllers/auth');
 
-const router = express.Router();
+const router = new Router();
 
 //POST /auth/signup
 router.post('/signup', [
     body('email', 'Please enter a valid Email!')
         .isEmail()
-        .custom((value, {req}) => {
-            return User.findOne({email: value})
-                .then(userDoc => {
-                    if(userDoc){
-                        return Promise.reject('Email already exists!');
-                    }
-                })
-        })
+        // .custom((value, {req}) => {
+        //     return User.findOne({email: value})
+        //         .then(userDoc => {
+        //             if(userDoc){
+        //                 return Promise.reject('Email already exists!');
+        //                 // throw new Error('Email already exists!');
+        //
+        //             }
+        //         })
+        // })
         .normalizeEmail(),
     body('password',
         `Password is too weak! Password should contain at least one letter,
@@ -32,10 +34,10 @@ router.post('/signup', [
             }
             return true
         }),
-    body('name')
-        .trim()
-        .not()
-        .isEmpty()
+    // body('name')
+    //     .trim()
+    //     .not()
+    //     .isEmpty()
 ], authController.signup);
 
 //POST /auth/login
@@ -51,5 +53,10 @@ router.patch('/reset',
         .trim()
         .isStrongPassword(),
     authController.resetPassword);
+
+router.post('/logout', authController.logout);
+router.get('/activate/:link', authController.activateEmail);
+router.get('/refresh', authController.refreshToken);
+
 
 module.exports = router;
