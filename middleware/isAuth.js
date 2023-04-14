@@ -10,14 +10,15 @@ module.exports = (req, res, next) => {
     const authHeader = req.get('Authorization');
     console.log({authHeader});
   if(!authHeader) {
-      const error = new Error('No Header');
+      const error = new Error('Not authenticated! (No Header)');
       error.statusCode = 401;
       throw error;
   }
   const accessToken = authHeader.split(' ')[1];
   // let decodedToken;
   try {
-      const userData = validateAccessToken(accessToken, process.env.JWT_ACCESS_SECRET);
+      const userData = validateAccessToken(accessToken);
+      // const userData = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET);
       // decodedToken = jwt.verify(token, process.env.JWT_SECRET);
       if(!userData){
           const error = new Error('Not authenticated!');

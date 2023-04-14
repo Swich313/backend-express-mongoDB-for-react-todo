@@ -55,12 +55,19 @@ exports.login = async (req, res, next) => {
         //     // secure: process.env.NODE_ENV === 'production',          //for https only
         // })
         // // res.setHeader('Set-Cookie', [`refreshToken=${userData.refreshToken};Domain=http://127.0.0.1/;HttpOnly;maxAge=2592000000;SameSite=Strict;`]);
-        res.status(200).json({accessToken: userData.accessToken, refreshToken: userData.refreshToken, userId: userData.user._id.toString()});
+        res.status(200).json({
+            accessToken: userData.accessToken,
+            refreshToken: userData.refreshToken,
+            userId: userData.user._id.toString(),
+            userEmail: userData.user.email,
+            userName: userData.user.name});
+        return;
     } catch (err) {
         if(!err.statusCode){
             err.statusCode = 500;
         }
         next(err);
+        return err;
     }
 };
 
@@ -209,7 +216,15 @@ exports.activateEmail = async (req, res, next) => {
 
 exports.refreshToken = async (req, res, next) => {
     try {
-        const {refreshToken} = req.body;
+        const authHeader = req.get('Authorization');
+        if(!authHeader) {
+            const error = new Error('Not authenticated!');
+            error.statusCode = 401;
+            throw error;
+        }
+        const refreshToken = authHeader.split(' ')[1];
+        // const {refreshToken} = req.body;
+        console.log({refresh: refreshToken});
 
         // implement sending refreshToken via httpOnly cookie;
         // const {refreshToken} = req.cookies;
@@ -225,6 +240,23 @@ exports.refreshToken = async (req, res, next) => {
         // })
         res.status(200).json({accessToken: userData.accessToken, refreshToken: userData.refreshToken, userId: userData.user._id.toString()});
     } catch (err) {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.getUserName = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.userId);
+        if(!user) {
+            const error = new Error('No user was found');
+            error.statusCode = 404;
+            throw error;
+        }
+        res.status(200).json({userName: user.name, userEmail: user.email});
+    } catch (e) {
         if(!err.statusCode){
             err.statusCode = 500;
         }

@@ -85,12 +85,13 @@ exports.createTodo = async (req, res, next) => {
         await todo.save();
         const user = await User.findById(req.userId);
         user.todos.push(todo);
-        await user.save();
+        const savedTodo = await user.save();
         console.log(todo);
         res.status(201).json({
             message: 'Post created successfully!',
             todo: todo
         });
+        return savedTodo;               //for test of todoController
     } catch (err) {
         console.log(err)
         if (!err.statusCode) {
